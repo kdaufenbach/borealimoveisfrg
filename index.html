@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<style>
+/* Estilos cabecalho */
+		.empresa-container {
+			display: flex;
+		    align-items: center; /* Alinha verticalmente */
+		    justify-content: space-between; /* Espaço entre elementos */
+		    max-width: 900px; /* Ajuste conforme necessário */
+		    margin: auto; /* Centraliza */
+		    gap: 20px; /* Espaçamento entre a logo e os dados */
+		}
+		
+		.logo {
+		    width: 200px; /* Ajuste conforme necessário */
+		}
+		
+		.empresa-info {
+		    font-size: 14px;
+		    text-align: left;
+		}
+		/* Estilos gerais */
+		body {
+		    font-family: Arial, sans-serif;
+		    margin: 10px;
+		    line-height: 1.5;
+		    text-align: center;
+		}
+		
+		/* Contêiner do formulário */
+		.container {
+		    max-width: 900px;
+		    margin: auto;
+		    padding: 10px;
+		}
+		
+		.termos{
+			font-size: 12px;
+		}
+		
+		/* Seções do formulário */
+		.section {
+		    margin-top: 20px;
+		    border: 1.5px solid #ccc;
+		    padding: 20px;
+		    border-radius: 10px;
+		}
+		
+		/* Configuração dos inputs para telas menores */
+		input, textarea, select {
+		    /*width: 100%;*/
+		    padding: 8px;
+		    margin-top: 4px;
+		    box-sizing: border-box;
+		    border: 1px solid #ccc;
+		    font-size: 16px; /* Melhor leitura em telas pequenas */
+		}
+		
+		/* Ajustes para telas menores */
+		@media (max-width: 600px) {
+		    .container {
+		        width: 95%;
+		        padding: 10px;
+		    }
+		
+		    input, textarea, select {
+		        font-size: 14px; /* Reduz um pouco o tamanho da fonte */
+		    }
+		
+		 
+		    button {
+		        width: 100%;
+		        font-size: 16px;
+		    }
+		}
+		
+		/* Melhorando o botão */
+		button {
+		    display: block;
+		    margin: 20px auto;
+		    padding: 12px;
+		    font-size: 18px;
+		    cursor: pointer;
+		    border: none;
+		    background-color: #007BFF;
+		    color: white;
+		    border-radius: 5px;
+		}
+		
+		button:hover {
+		    background-color: #008BB0;
+		}
+
+		button_limpar {
+		    display: block;
+		    margin: 20px auto;
+		    padding: 12px;
+		    font-size: 18px;
+		    cursor: pointer;
+		    border: none;
+		    background-color: #008BB0;
+		    color: white;
+		    border-radius: 5px;
+		}
+		
+		button_limpar:hover {
+		    background-color: #008BB2;
+		}
+				
+</style>		
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <script>
+        function validarLogin() {
+            var usuario = document.getElementById("usuario").value;
+            var senha = document.getElementById("senha").value;
+
+            if (usuario === "corretor" && senha === "boreal") {
+                window.location.href = "proposta.html"; // Redireciona para a página segura
+            } else {
+                alert("Usuário ou senha incorretos!");
+            }
+        }
+    </script>
+</head>
+<body>
+<div class= "container">
+    <h2>Login</h2>
+    <input type="text" id="usuario" placeholder="Usuário"><br>
+    <input type="password" id="senha" placeholder="Senha"><br>
+    <button type="button" onclick="validarLogin()">Entrar</button>
+</div>
+</body>
+</html>
