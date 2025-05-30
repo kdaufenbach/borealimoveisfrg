@@ -114,38 +114,7 @@
 	</style>
 	<script>
 
-		function validarLogin() {
-            	var usuario = document.getElementById("usuario").value;
-           	var senha = document.getElementById("senha").value;
-
-            	if (usuario === "admin" && senha === "boreal") {
-                window.location.href = "index.html"; // Redireciona para a página segura
-           	} else {
-                alert("Usuário ou senha incorretos!");
-            	}
-        	}
-    		window.onload = function() {
-		function aplicarMascara(input, mascara) {
-        	input.addEventListener("input", function () {
-            let valor = input.value.replace(/\D/g, ""); // Remove tudo que não for número
-            let resultado = "";
-            let indiceMascara = 0;
-
-            for (let i = 0; i < valor.length && indiceMascara < mascara.length; i++) {
-                if (mascara[indiceMascara] === "9") {
-                    resultado += valor[i];
-                } else {
-                    resultado += mascara[indiceMascara];
-                    i--; 
-                }
-                indiceMascara++;
-            }
-
-            input.value = resultado;
-        });
-    }
-
-    function aplicarMascaraValor(input) {
+	function aplicarMascaraValor(input) {
         input.addEventListener("input", function () {
             let valor = input.value.replace(/\D/g, ""); // Remove tudo que não for número
             valor = (valor / 100).toFixed(2); // Divide por 100 para ajustar casas decimais
@@ -171,11 +140,6 @@
 </head>
 
 <body>
-	<h2>Login</h2>
-    	<input type="text" id="usuario" placeholder="Usuário"><br>
-   	<input type="password" id="senha" placeholder="Senha"><br>
-   	<button onclick="validarLogin()">Entrar</button>
-
 	<!-- Logotipo da Boreal Imóveis -->
 	<div class="empresa-container">
 		<div>
