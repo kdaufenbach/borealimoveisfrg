@@ -192,7 +192,22 @@
         resultado.style.color = "green";
         return true;
     }
-</script>
+
+
+	function limparDados() {
+        let confirmacao = confirm("Tem certeza que deseja limpar os dados?");
+        
+        if (confirmacao) {
+            localStorage.clear(); // Remove todos os itens armazenados
+            document.querySelectorAll("#formulario input, #formulario select, #formulario textarea").forEach(input => {
+                input.value = ""; // Limpa os campos
+            });
+            alert("Os dados foram apagados!");
+        } else {
+            alert("A ação foi cancelada.");
+        }
+    }
+
 </script>
 </head>
 
