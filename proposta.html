@@ -112,178 +112,87 @@
 		}
 				
 	</style>
-<script>
-    window.onload = function() {
-        function aplicarMascaraValor(input) {
-            input.addEventListener("input", function () {
-                let valor = input.value.replace(/\D/g, "");
-                valor = (valor / 100).toFixed(2);
-                valor = valor.replace(".", ",");
-                input.value = "R$ " + valor.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-            });
-        }
+	<script>
+		window.onload = function() {
+		function aplicarMascara(input, mascara) {
+        input.addEventListener("input", function () {
+            let valor = input.value.replace(/\D/g, ""); // Remove tudo que não for número
+            let resultado = "";
+            let indiceMascara = 0;
 
-        function validarCPF(input) {
-            input.addEventListener("input", function () {
-                let valor = input.value.replace(/\D/g, "");
-                if (valor.length > 11) {
-                    valor = valor.substring(0, 11);
+            for (let i = 0; i < valor.length && indiceMascara < mascara.length; i++) {
+                if (mascara[indiceMascara] === "9") {
+                    resultado += valor[i];
+                } else {
+                    resultado += mascara[indiceMascara];
+                    i--; 
                 }
-                input.value = valor.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
-            });
-
-            input.addEventListener("change", function () {
-                if (input.value.trim() !== "" && !checarCPF(input.value)) {
-                    alert("CPF inválido! Por favor, insira um CPF válido.");
-                    input.value = "";
-                    setTimeout(() => input.focus(), 0);
-                }
-            });
-        }
-
-        function checarCPF(cpf) {
-            cpf = cpf.replace(/\D/g, "");
-
-            if (cpf.length !== 11 || /^(\d)\1+$/.test(cpf)) {
-                return false;
+                indiceMascara++;
             }
 
-            let soma = 0;
-            for (let i = 0; i < 9; i++) {
-                soma += parseInt(cpf[i]) * (10 - i);
-            }
+            input.value = resultado;
+        });
+    }
 
-            let resto = soma % 11;
-            let digito1 = resto < 2 ? 0 : 11 - resto;
+    function aplicarMascaraValor(input) {
+        input.addEventListener("input", function () {
+            let valor = input.value.replace(/\D/g, ""); // Remove tudo que não for número
+            valor = (valor / 100).toFixed(2); // Divide por 100 para ajustar casas decimais
+            valor = valor.replace(".", ","); // Substitui ponto por vírgula para moeda brasileira
+            input.value = "R$ " + valor.replace(/\B(?=(\d{3})+(?!\d))/g, "."); // Adiciona pontos separadores
+        });
+    }
 
-            if (parseInt(cpf[9]) !== digito1) {
-                return false;
-            }
+    // Aplicando máscaras nos inputs de CPF
+     // aplicarMascara(document.querySelector("input[name='cpf']"), "999.999.999-99");
+     // aplicarMascara(document.querySelector("input[name='cpf2']"), "999.999.999-99");
 
-            soma = 0;
-            for (let i = 0; i < 10; i++) {
-                soma += parseInt(cpf[i]) * (11 - i);
-            }
+    // Aplicando máscaras nos inputs de telefone
+    aplicarMascara(document.querySelector("input[name='telefone']"), "(99) 99999-9999");
+    aplicarMascara(document.querySelector("input[name='telefonec']"), "(99) 99999-9999");
+    aplicarMascara(document.querySelector("input[name='telefone2']"), "(99) 99999-9999");
 
-            resto = soma % 11;
-            let digito2 = resto < 2 ? 0 : 11 - resto;
+    // Aplicando máscaras nos inputs de valores
+    aplicarMascaraValor(document.querySelector("input[name='valor_total']"));
+    aplicarMascaraValor(document.querySelector("input[name='valor_sinal']"));
+}
 
-            return parseInt(cpf[10]) === digito2;
+
+    function validarCPF() {
+        var cpf = document.getElementById("cpf").value.replace(/\D/g, ''); // Remove caracteres não numéricos
+        var resultado = document.getElementById("resultado");
+
+        if (cpf.length !== 11 || /^(\d)\1{10}$/.test(cpf)) {
+            resultado.innerHTML = "CPF inválido!";
+            resultado.style.color = "red";
+            return false;
         }
 
-        function validarTelefoneCelular(input) {
-            input.addEventListener("input", function () {
-                let valor = input.value.replace(/\D/g, "");
-
-                if (valor.length > 11) {
-                    valor = valor.substring(0, 11);
-                }
-
-                input.value = valor.replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2-$3");
-            });
-
-            input.addEventListener("input", function () {
-                if (input.value.trim() !== "" && !checarTelefone(input.value)) {
-                    alert("Número de telefone inválido! Por favor, insira um número real.");
-                    input.value = "";
-                    setTimeout(() => input.focus(), 0);
-                }
-            });
+        var soma = 0, resto;
+        for (var i = 1; i <= 9; i++) soma += parseInt(cpf.charAt(i - 1)) * (11 - i);
+        resto = (soma * 10) % 11;
+        if (resto === 10 || resto === 11) resto = 0;
+        if (resto !== parseInt(cpf.charAt(9))) {
+            resultado.innerHTML = "CPF inválido!";
+            resultado.style.color = "red";
+            return false;
         }
 
-        function checarTelefone(numero) {
-            numero = numero.replace(/\D/g, "");
-
-            if (numero.length !== 11) {
-                return false;
-            }
-
-            const DDDsValidos = [
-                "11", "12", "13", "14", "15", "16", "17", "18", "19", // SP
-                "21", "22", "24", // RJ
-                "27", "28", // ES
-                "31", "32", "33", "34", "35", "37", "38", // MG
-                "41", "42", "43", "44", "45", "46", // PR
-                "47", "48", "49", // SC
-                "51", "53", "54", "55", // RS
-                "61", // DF
-                "62", "64", // GO
-                "63", // TO
-                "65", "66", // MT
-                "67", // MS
-                "68", "69", // AC, RO
-                "71", "73", "74", "75", "77", // BA
-                "79", // SE
-                "81", "87", // PE
-                "82", // AL
-                "83", // PB
-                "84", // RN
-                "85", "88", // CE
-                "86", "89", // PI
-                "91", "93", "94", // PA
-                "92", "97", // AM
-                "95", // RR
-                "96", // AP
-                "98", "99" // MA
-            ];
-
-            const DDD = numero.substring(0, 2);
-            const prefixo = numero.substring(2, 3);
-
-            return DDDsValidos.includes(DDD) && prefixo === "9" && !/^(00000000000|99999999999)$/.test(numero);
+        soma = 0;
+        for (i = 1; i <= 10; i++) soma += parseInt(cpf.charAt(i - 1)) * (12 - i);
+        resto = (soma * 10) % 11;
+        if (resto === 10 || resto === 11) resto = 0;
+        if (resto !== parseInt(cpf.charAt(10))) {
+            resultado.innerHTML = "CPF inválido!";
+            resultado.style.color = "red";
+            return false;
         }
 
-        function validarTelefoneFixoOuInternacional(input) {
-            input.addEventListener("input", function () {
-                let valor = input.value.replace(/\D/g, "");
-
-                if (valor.length > 13) {
-                    valor = valor.substring(0, 13);
-                }
-
-                // Formatação para números fixos nacionais e internacionais (+XX XX XXXX-XXXX)
-                if (valor.startsWith("55") && valor.length >= 10) {
-                    input.value = valor.replace(/(\d{2})(\d{4})(\d{4})/, "($1) $2-$3");
-                } else if (valor.length > 12) {
-                    input.value = valor.replace(/(\d{2,3})(\d{2,4})(\d{4})/, "+$1 $2 $3-$4");
-                }
-            });
-
-            input.addEventListener("change", function () {
-                if (input.value.trim() !== "" && !checarTelefoneFixoOuInternacional(input.value)) {
-                    alert("Número de telefone inválido! Por favor, insira um número real.");
-                    input.value = "";
-                    setTimeout(() => input.focus(), 0);
-                }
-            });
-        }
-
-        function checarTelefoneFixoOuInternacional(numero) {
-            numero = numero.replace(/\D/g, "");
-
-            // Permitir números fixos nacionais e internacionais
-            return numero.length >= 10 && !/^(00000000000|99999999999)$/.test(numero);
-        }
-
-        function validarEmail(input) {
-            input.addEventListener("change", function () {
-                let valor = input.value.trim();
-                let regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                if (!regex.test(valor)) {
-                    alert("Por favor, insira um e-mail válido.");
-                    input.value = "";
-                    setTimeout(() => input.focus(), 0);
-                }
-            });
-        }
-
-        // Aplicando máscaras e validações
-        document.querySelectorAll("input[name='cpf'], input[name='cpf2']").forEach(validarCPF);
-        document.querySelectorAll("input[name='telefone'],input[name='telefone2']").forEach(validarTelefoneCelular);
-        document.querySelectorAll("input[name='telefonec'], input[name='telefonec2']").forEach(validarTelefoneFixoOuInternacional);
-        document.querySelectorAll("input[name='valor_total'], input[name='valor_sinal']").forEach(aplicarMascaraValor);
-        document.querySelectorAll("input[name='email'], input[name='email2']").forEach(validarEmail);
-    };
+        resultado.innerHTML = "CPF válido!";
+        resultado.style.color = "green";
+        return true;
+    }
+</script>
 </script>
 </head>
 
@@ -310,7 +219,7 @@
 					</tr>
 					<tr>
 						<td><label>CPF:</label></td>
-						<td><input type="text" name="cpf"></td>
+						<td><input type="text" name="cpf" oninput="validarCPF()"></td>
 					</tr>
 					<tr>
 						<td><label>RG:</td>
@@ -349,7 +258,7 @@
 					</tr>
 					<tr>
 						<td><label>Telefones:</td>
-						<td></label><input type="text" name="telefone2">/<input type="text" name="telefonec2"></td>
+						<td></label><input type="text" name="telefone2">/<input type="text" name="telefonec"></td>
 					</tr>
 					<tr>
 						<td><label>E-mail:</td>
@@ -524,8 +433,6 @@
         window.print(); // Inicia a impressão
     }
 }
-
-	</script>
 </body>
 
 </html>
